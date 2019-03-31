@@ -1,104 +1,72 @@
 <?php
-
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
-{
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
+use Yii;
+use yii\base\Model;
+use yii\db\Query;
+use app\models\common\Common;
 
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
+class User extends Model{
 
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function findIdentity($id)
-    {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
-    }
+     public static function selectUser(int $id,string $login_name = ""){
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
+          $params = Common::getParams();
+          //去掉参数中的oper
+          if(isset($params['oper'])) unset($params['oper']);
+          $pre_params = ["id"=>$id,"login_name"=> $login_name];
+          
+          $query = new Query();
+          $res = $query->from('wt_user')
+                       ->filterWhere($pre_params)
+                       ->all();
 
-        return null;
-    }
+          return $res;
+     }
 
-    /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
-     */
-    public static function findByUsername($username)
-    {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
+     public static function selectUserByName(string $login_name){
+          $params = Common::getParams();
+          $command = yii::$app->db->createCommand("select * from wt_user where login_name = :login_name");
+          $res = $command->bindValue(':login_name',$login_name)->queryOne(); 
+          return $res;
+     }
 
-        return null;
-    }
+     public static function updateUserOne(){
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+          $params = Common::getParams();
+          //去掉参数中的oper
+          if(isset($params['oper'])) unset($params['oper']);
+          $params['update_time'] = time();
+          $command = yii::$app->db->createCommand();
+          $res = $command->update('wt_user',$params,'id ='.$params['id'] )->execute();
+          return $res;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthKey()
-    {
-        return $this->authKey;
-    }
+     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
-    }
+     public static function CreateUserOne(){
 
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
-    }
+          $params = Common::getParams();
+          //去掉参数中的oper
+          if(isset($params['oper'])) unset($params['oper']);
+          $params['create_time'] = $params['update_time'] = time();
+          $command = yii::$app->db->createCommand();
+          $res = $command->insert('wt_user',$params )->execute();
+          return $res;
+
+     }
+
+
+     public static function deleteUserOne(){
+
+          $params = Common::getParams();
+          //去掉参数中的oper
+          if(isset($params['oper'])) unset($params['oper']);
+
+          $command = yii::$app->db->createCommand();
+          $res = $command->delete('wt_user', "id=".$params['id'] )->execute();
+          return $res;
+
+     }
+
+
 }

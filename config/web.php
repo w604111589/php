@@ -40,6 +40,23 @@ $config = [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
+                [
+                    'class'=> 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'categories' => ['user'],
+                    'logFile' => '@app/runtime/logs/mylog/requests.log',
+                    'maxFileSize' => 1024 * 10,
+                    'maxLogFiles' => 20,
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error', 'warning','info'],
+                    'logVars'=>[],
+                    //表示以yii\db\或者app\models\开头的分类都会写入这个文件
+                    'categories'=>['yii\db\*'],
+                    //表示写入到文件
+                    'logFile'=>'@app/runtime/logs/mylog/yiisql_'.date('y_m_d').'.log',
+                ],
             ],
         ],
         'urlManager' => [
