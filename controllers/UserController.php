@@ -12,9 +12,7 @@ class UserController extends BaseController{
 
      public function actionSelect(int $id,string $login_name = ""){
           $params = Common::getParams();
-          
           $res = User::selectUser($id,$login_name);
-
 		return Res::success($res);
      }
 
@@ -54,7 +52,6 @@ class UserController extends BaseController{
 
      public function actionDelete(){
           $res = User::updateUser();
-
 		return Res::success($res,"更改成功");
      }
 

@@ -68,5 +68,33 @@ class User extends Model{
 
      }
 
+     public static function generateToken(){
+          $controller = Yii::$app->controller->id;
+          $action = Yii::$app->controller->action->id; 
+
+          $client_secret="wangtao";
+          $api_token_server = md5( $controller . $action .  date('Y-m-d', time()) .  $client_secret);
+          // var_dump($api_token_server );die;
+          return $api_token_server;
+     }
+
+
+     public static function checkToken(){
+          $params = Common::getParams();
+
+          if(isset($params['token'])){
+              if($params['token']){
+                  if(!isset($_SESSION[$params['token']])){
+                      return 1;
+                  }
+              }else{
+                  return 2;
+              }
+          }else{
+              return 2;
+          }
+          return 0;
+     }
+
 
 }

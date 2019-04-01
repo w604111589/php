@@ -125,4 +125,10 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function actionTest()
+    {
+        $arr = ["name"=>"wangtao"];
+		$this->asJson($arr);
+    }
 }
