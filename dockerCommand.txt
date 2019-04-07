@@ -1,0 +1,9 @@
+docker run -it -v g:\phpProject\php:/home/php ubuntu64 /bin/bash
+
+//运行docker
+docker run -d -p 5000:5000 training/webapp python app.py
+
+
+docker run --name nginx -d -p 7000:7000 -v g:\phpProject\php\docker_nginx.conf:/etc/nginx/conf.d/docker_nginx.conf  --link wt-php nginx
+
+docker run --name wt-php -it -v  g:\phpProject\php:/home/php   -d   php:7.3.4-fpm-alpine3.8

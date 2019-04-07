@@ -17,7 +17,7 @@ class Common extends Model{
 			$info_get = yii::$app -> request ->get();
 			$info_post = yii::$app -> request ->post();
 			$info = array_merge($info_get,$info_post);
-		}
+        }
 		return $info;
 	}
 

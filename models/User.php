@@ -9,13 +9,13 @@ use app\models\common\Common;
 class User extends Model{
 
 
-     public static function selectUser(int $id,string $login_name = ""){
+     public static function selectUser(int $id = 0,string $user_name = ""){
 
           $params = Common::getParams();
           //去掉参数中的oper
           if(isset($params['oper'])) unset($params['oper']);
-          $pre_params = ["id"=>$id,"login_name"=> $login_name];
-          
+          $pre_params = ["id"=>$id,"user_name"=> $user_name];
+
           $query = new Query();
           $res = $query->from('wt_user')
                        ->filterWhere($pre_params)
@@ -24,10 +24,25 @@ class User extends Model{
           return $res;
      }
 
-     public static function selectUserByName(string $login_name){
+     public static function selectUserAll(){
+
           $params = Common::getParams();
-          $command = yii::$app->db->createCommand("select * from wt_user where login_name = :login_name");
-          $res = $command->bindValue(':login_name',$login_name)->queryOne(); 
+          //去掉参数中的oper
+          if(isset($params['oper'])) unset($params['oper']);
+          // $pre_params = ["id"=>$id,"user_name"=> $user_name];
+          $pre_params = [];
+          $query = new Query();
+          $res = $query->from('wt_user')
+                       ->filterWhere($pre_params)
+                       ->all();
+
+          return $res;
+     }
+
+     public static function selectUserByName(string $user_name){
+          $params = Common::getParams();
+          $command = yii::$app->db->createCommand("select * from wt_user where user_name = :user_name");
+          $res = $command->bindValue(':user_name',$user_name)->queryOne(); 
           return $res;
      }
 
