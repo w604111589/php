@@ -11,7 +11,8 @@ class BaseController extends Controller
 {
     public $oper;
 
-    public $verification = ["login","register","user"];
+
+    public $verification = ["login","register","upload"];
 
     public $token = '';
     /**
